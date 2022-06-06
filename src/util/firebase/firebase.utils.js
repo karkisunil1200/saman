@@ -5,55 +5,39 @@ import {
   signInWithRedirect,
   signInWithPopup,
   GoogleAuthProvider,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, getDocs } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD5_pj7VK-T_B2mHb3Gh4073IGpVg0sH6c",
-  authDomain: "saman-4418a.firebaseapp.com",
-  projectId: "saman-4418a",
-  storageBucket: "saman-4418a.appspot.com",
-  messagingSenderId: "895697393936",
-  appId: "1:895697393936:web:9f76336ff46f3e234fed95",
+  apiKey: "AIzaSyCrvsPtzTTw6EbsjHSPGMAgSTfPVbkLeTQ",
+  authDomain: "clothing-d8a76.firebaseapp.com",
+  projectId: "clothing-d8a76",
+  storageBucket: "clothing-d8a76.appspot.com",
+  messagingSenderId: "647840402032",
+  appId: "1:647840402032:web:d95349ef22be35edb782b5",
+  measurementId: "G-4Z9Z2DXTC5",
 };
 
-// Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
-const provider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
 
-provider.setCustomParameters({
+googleProvider.setCustomParameters({
   prompt: "select_account",
 });
 
 export const auth = getAuth();
-export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
+
+export const signInWithGooglePopup = () =>
+  signInWithPopup(auth, googleProvider);
 
 export const db = getFirestore();
 
 export const createUserDocumentFromAuth = async (userAuth) => {
   const userDocRef = doc(db, "users", userAuth.uid);
-
   console.log(userDocRef);
+  const userSnapShot = await getDoc(userDocRef);
 
-  const userSnapshot = await getDoc(userDocRef);
-  console.log(userSnapshot.exists());
-
-  // if user data exists
-  if (!userSnapshot.exists()) {
-    const { displayName, email } = userAuth;
-    const createdAt = new Date();
-
-    try {
-      await setDoc(userDocRef, { displayName, email, createdAt });
-    } catch (error) {
-      console.log("error creaing the user", error.message);
-    }
-  }
-
-  return userDocRef;
-
-  // if user data does not exists
-
-  // return userDocRef
+  console.log(userSnapShot.exists());
 };
